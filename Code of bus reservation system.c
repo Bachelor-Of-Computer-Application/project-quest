@@ -86,4 +86,42 @@ else
     printf("Booking successful!%d seat booked on bus number %d.\n",seats to book,bus number);
 }
 }
+} 
+// Function to cancle tickets
+void cancle ticket(struct bus buses[],int num buses)
+{
+	printf("\nEnter Bus number:");
+	int bus number;
+	scanf("%d",&bus number);
+	// Find the bus with the given bus number
+	int bus index=-1;
+	for(int i=0;i<num buses;i++)
+	{
+		if(buses[i].bus number == bus number)
+		{
+			bus index =i;
+			break;
+		}
+	}
+	if(bus index==-1)
+	{
+		printf("Bus with bus number%d not found.\n",bus number);
+	}
 }
+else
+{
+printf("Enter number of seats to cancle:");
+int seats to cancle;
+scanf("%d",&seat to cancle >(buses[bus index].tfotal seats-buses[bus index].available seats))
+{
+	printf("Error:You cannot cancle more seats than were booked.\n");
+	}
+	else
+	{
+		buses[bus index].avilable seats += seats to cancle;
+		printf("Cancellation successful!%d seats canceled on bus number %d.\n",seats to cancle,bus number);
+		}
+}
+}
+//Function to check bus status
+
