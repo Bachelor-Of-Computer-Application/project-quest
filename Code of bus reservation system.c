@@ -36,8 +36,8 @@ printf("4. Logout\n");
 printf("Enter your choice:");
 }
 
-loginuser:
-int loginUser(struct Userusers[10],int numUsers,char username[],char password[])
+loginuser()
+int loginuser(struct userusers[10],int numusers,char username[],char password[])
 {
 	for(int i=0;i<numUsers;i++)
 	{
