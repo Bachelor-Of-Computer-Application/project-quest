@@ -38,7 +38,9 @@ void displayUserMenu(){
 }
 
 // Function to perform user login
-int loginUser(struct User users[], int numUsers, char username[], char password[]){
+int loginUser(struct User users[], int numUsers, char username[], char password[])
+
+{
     for (int i = 0; i < numUsers; i++){
         if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0){
             return i; // Return the index of the logged-in user
