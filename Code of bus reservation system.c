@@ -1,89 +1,187 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-struct bus{
-	int busnumber;
-	char source[50];
-	char desination[50];
-	int totalseats;
-	int availableseats;
-	float fare;
+#include <stdio.h>
+#include <string.h>
+struct Bus {
+    int number;
+    char from[50];
+    char to[50];
+    int totalSeats;
+    int freeSeats;
+    float price;
 };
 
+struct User {
+    char name[50];
+    char pass[50];
+};
+struct User users[3] = {
+    {"alice", "hello123"},
+    {"bob",   "mypass"},
+    {"carol", "abc456"}
+};
 
- struct user{
- 	char username[50];
- 	char password[50];
- };
- 
- 
-void displayMainMenu() 
-{
-	printf("\n===Main Menu===\n");
-	printf("1. Login\n");
-	printf("1. Exit\n");
-	printf("Enter your choice:");
+struct Bus buses[3] = {
+    {101, "City A", "City B", 50, 50, 500.0f},
+    {102, "City C", "City D", 40, 40, 400.0f},
+    {103, "City E", "City F", 30, 30, 300.0f}
+};
+
+//login by user 
+
+int login(char name[], char pass[]) {
+    int i;
+    for (i = 0; i < 3; i++) {
+        if (strcmp(users[i].name, name) == 0 &&
+            strcmp(users[i].pass, pass) == 0) {
+            return i; // login success
+        }
+    }
+    return -1; // login failed
 }
 
+//FIND BUS BY NUMBER
 
-void displayUserMenu()
-{
-printf("\n=== User Menu ===\n");
-printf("1. Book a Ticket\n");
-printf("2. Cancle a Ticket\n");
-printf("3. Check Bus Status\n");
-printf("4. Logout\n");
-printf("Enter your choice:");
+int findBus(int num) {
+    int i;
+    for (i = 0; i < 3; i++) {
+        if (buses[i].number == num)
+            return i;
+    }
+    return -1; 
 }
 
-loginuser:
-int loginUser(struct Userusers[10],int numUsers,char username[],char password[])
-{
-	for(int i=0;i<numUsers;i++)
-	{
-		if(strcmp(users[i].username,username)==0&&strcmp(users[i].password,password)==0)
-		{
-		return i;	
-		}
-		return -1;
-	}
+//BOOKING TICKET 
+
+void bookTicket() {
+    int num, seats, idx;
+
+    printf("Enter Bus Number: ");
+    scanf("%d", &num);
+    idx = findBus(num);
+
+    if (idx == -1) {
+        printf("Bus not found!\n");
+        return;
+    }
+
+    printf("Enter seats to book: ");
+    scanf("%d", &seats);
+
+    if (seats > buses[idx].freeSeats) {
+        printf("Only %d seats available.\n", buses[idx].freeSeats);
+    } else {
+        buses[idx].freeSeats -= seats;
+        printf("Booked %d seats on Bus %d!\n", seats, num);
+    }
 }
-// Function to book tickets
-void book Ticket(sztruct bus busses[],int numBuses)
-{
-     printf("\nEnter bus number:");
-     int bus number;
-     scanf("%d",&bus number:");
-     
-     
-     
-     // Find the bus with the given bus number
-     int bus index=-1
-     for(int i=0;i<num buses;i++)
-     {
-             if (buses[i].bus number == bus number)
-             {
-                              bus index=i;
-                              break;
-                              }
-                              }
-if(bus Index==-1)
-{
-printf("Bus with Bus number %d not found.\n",bus number);
+
+//CANCELlING TICKET 
+
+void cancelTicket() {
+    int num, seats, idx;
+
+    printf("Enter Bus Number: ");
+    scanf("%d", &num);
+    idx = findBus(num);
+
+    if (idx == -1) {
+        printf("Bus not found!\n");
+        return;
+    }
+
+    printf("Enter seats to cancel: ");
+    scanf("%d", &seats);
+
+    int booked = buses[idx].totalSeats - buses[idx].freeSeats;
+    if (seats > booked) {
+        printf("Error: Only %d seats were booked.\n", booked);
+    } else {
+        buses[idx].freeSeats += seats;
+        printf("Cancelled %d seats on Bus %d!\n", seats, num);
+    }
 }
-else
-{
-    printf("Enter number of seats:");
-    int seats to book;
-    scanf("%d",&seats to book);
-    if(buses[bus index].avilable seats<seats to book)
-    {
-    printf("Sorry,only %d seats are avilable.\n",buses[bus index].avilable seats);
+
+// CHECK BUS STATUS
+
+void checkBus() {
+    int num, idx;
+
+    printf("Enter Bus Number: ");
+    scanf("%d", &num);
+    idx = findBus(num);
+
+    if (idx == -1) {
+        printf("Bus not found!\n");
+        return;
+    }
+
+    printf("\nBus Number  : %d\n",   buses[idx].number);
+    printf("From        : %s\n",     buses[idx].from);
+    printf("To          : %s\n",     buses[idx].to);
+    printf("Total Seats : %d\n",     buses[idx].totalSeats);
+    printf("Free Seats  : %d\n",     buses[idx].freeSeats);
+    printf("Price       : %.2f\n",   buses[idx].price);
 }
-else
-{
-    buses[bus index].avilable seats = seats to book;
-    printf("Booking successful!%d seat booked on bus number %d.\n",seats to book,bus number);
-}
-}
+
+// MAIN BLOCK
+
+int main() {
+    char name[50], pass[50];
+    int loggedIn = -1;
+    int choice;
+
+    while (1) {
+
+        // Not logged in ? show login menu
+        if (loggedIn == -1) {
+            printf("\n=== Main Menu ===\n");
+            printf("1. Login\n");
+            printf("2. Exit\n");
+            printf("Choice: ");
+            scanf("%d", &choice);
+
+            if (choice == 1) {
+                printf("Username: ");
+                scanf("%49s", name);
+                printf("Password: ");
+                scanf("%49s", pass);
+
+                loggedIn = login(name, pass);
+
+                if (loggedIn == -1)
+                    printf("Wrong username or password!\n");
+                else
+                    printf("Welcome, %s!\n", name);
+
+            } else if (choice == 2) {
+                printf("Goodbye!\n");
+                break;
+            } else {
+                printf("Invalid choice!\n");
+            }
+
+        // Logged in ? show user menu
+        } else {
+            printf("\n=== User Menu ===\n");
+            printf("1. Book Ticket\n");
+            printf("2. Cancel Ticket\n");
+            printf("3. Check Bus\n");
+            printf("4. Logout\n");
+            printf("Choice: ");
+            scanf("%d", &choice);
+
+            switch (choice) {
+                case 1: bookTicket();  break;
+                case 2: cancelTicket(); break;
+                case 3: checkBus();    break;
+                case 4:
+                    printf("Logged out.\n");
+                    loggedIn = -1;
+                    break;
+                default:
+                    printf("Invalid choice!\n");
+            }
+        }
+    }
+
+    return 0;
 }
